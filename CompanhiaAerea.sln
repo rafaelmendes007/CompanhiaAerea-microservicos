@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "voos", "voos", "{6E2643D9-3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Voos.Api", "voos\Voos.Api.csproj", "{C580A5AD-32B5-447F-B379-451885FFB6B2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "vendas", "vendas", "{96B45E6E-AE11-3300-C20C-C6814903C61C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vendas.Api", "vendas\Vendas.Api.csproj", "{7B691AF7-6FA9-480D-8BF0-84236AC4033E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,11 +33,24 @@ Global
 		{C580A5AD-32B5-447F-B379-451885FFB6B2}.Release|x64.Build.0 = Release|Any CPU
 		{C580A5AD-32B5-447F-B379-451885FFB6B2}.Release|x86.ActiveCfg = Release|Any CPU
 		{C580A5AD-32B5-447F-B379-451885FFB6B2}.Release|x86.Build.0 = Release|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Debug|x64.Build.0 = Debug|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Debug|x86.Build.0 = Debug|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Release|x64.ActiveCfg = Release|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Release|x64.Build.0 = Release|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Release|x86.ActiveCfg = Release|Any CPU
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C580A5AD-32B5-447F-B379-451885FFB6B2} = {6E2643D9-3980-7B05-1085-3BA7192C6E0E}
+		{7B691AF7-6FA9-480D-8BF0-84236AC4033E} = {96B45E6E-AE11-3300-C20C-C6814903C61C}
 	EndGlobalSection
 EndGlobal
