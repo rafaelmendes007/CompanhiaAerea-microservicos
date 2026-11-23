@@ -1,0 +1,47 @@
+@base = http://localhost:8083
+
+### Listar todos os voos
+GET {{base}}/voos
+
+### Buscar com filtros (deve trazer só o AE1001)
+GET {{base}}/voos?origem=FOR&destino=GRU&data=2026-12-15
+
+### Detalhe de um voo
+GET {{base}}/voos/1
+
+### Voo inexistente (deve dar 404)
+GET {{base}}/voos/999
+
+### Cadastrar voo (deve dar 201)
+POST {{base}}/voos
+Content-Type: application/json
+
+{
+  "codigo": "AE3001",
+  "origem": "FOR",
+  "destino": "SSA",
+  "dataPartida": "2026-12-18T07:00:00",
+  "dataChegada": "2026-12-18T08:40:00",
+  "preco": 420.00,
+  "totalAssentos": 100
+}
+
+### Cadastro inválido (deve dar 400)
+POST {{base}}/voos
+Content-Type: application/json
+
+{
+  "codigo": "X1",
+  "origem": "FOR",
+  "destino": "FOR",
+  "dataPartida": "2026-12-18T07:00:00",
+  "dataChegada": "2026-12-18T06:00:00",
+  "preco": 100,
+  "totalAssentos": 10
+}
+
+### Reservar assento (assentosDisponiveis diminui 1)
+POST {{base}}/voos/1/reservar-assento
+
+### Liberar assento (assentosDisponiveis volta)
+POST {{base}}/voos/1/liberar-assento
