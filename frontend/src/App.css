@@ -1,0 +1,100 @@
+.cabecalho {
+  background-color: #12345b;
+  color: white;
+  padding: 24px 8%;
+}
+
+.cabecalho h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.cabecalho p {
+  margin: 6px 0 24px;
+  color: #cbdcf0;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+nav button {
+  padding: 10px 16px;
+  border: 1px solid #88a4c4;
+  border-radius: 6px;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+nav button:hover {
+  background-color: #29547f;
+}
+
+main {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+main section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(18, 52, 91, 0.08);
+}
+
+main h2 {
+  margin-top: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+form div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 400px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 12px;
+  border: 1px solid #aabbd0;
+  border-radius: 6px;
+  font: inherit;
+}
+
+form button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #195a96;
+  color: white;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #123f6c;
+}
+
+hr {
+  margin: 32px 0;
+  border: 0;
+  border-top: 1px solid #dce4ed;
+}
