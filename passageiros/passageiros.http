@@ -1,0 +1,67 @@
+@base = http://localhost:8081
+
+### Cadastrar passageiro (deve dar 201)
+POST {{base}}/passageiros
+Content-Type: application/json
+
+{
+  "nome": "Maria Silva",
+  "cpf": "12345678900",
+  "email": "maria@email.com"
+}
+
+### Buscar passageiro existente (deve dar 200)
+# Ajuste o id se o cadastro anterior não gerar o id 1
+GET {{base}}/passageiros/1
+
+### Passageiro inexistente (deve dar 404)
+GET {{base}}/passageiros/999
+
+### ID inválido (deve dar 404)
+GET {{base}}/passageiros/abc
+
+### CPF com menos de 11 dígitos (deve dar 400)
+POST {{base}}/passageiros
+Content-Type: application/json
+
+{
+  "nome": "João Souza",
+  "cpf": "123",
+  "email": "joao@email.com"
+}
+
+### CPF com pontuação (deve dar 400, pois o contrato aceita só 11 dígitos)
+POST {{base}}/passageiros
+Content-Type: application/json
+
+{
+  "nome": "João Souza",
+  "cpf": "123.456.789-00",
+  "email": "joao@email.com"
+}
+
+### E-mail inválido (deve dar 400)
+POST {{base}}/passageiros
+Content-Type: application/json
+
+{
+  "nome": "Ana Lima",
+  "cpf": "98765432100",
+  "email": "ana-sem-arroba"
+}
+
+### Nome vazio (deve dar 400)
+POST {{base}}/passageiros
+Content-Type: application/json
+
+{
+  "nome": "   ",
+  "cpf": "98765432100",
+  "email": "ana@email.com"
+}
+
+### JSON malformado (deve dar 400)
+POST {{base}}/passageiros
+Content-Type: application/json
+
+{ "nome": "Sem fechar
