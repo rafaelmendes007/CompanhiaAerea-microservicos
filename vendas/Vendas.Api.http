@@ -1,6 +1,80 @@
-@Vendas.Api_HostAddress = http://localhost:5086
+@vendas = http://localhost:8084
+@voos = http://localhost:8083
 
-GET {{Vendas.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### ---------- PREPARAÇÃO (cria voos especiais no serviço de Voos) ----------
 
-###
+### Voo caro: acima de 5000, o pagamento vai ser recusado. Anote o "id" da resposta.
+POST {{voos}}/voos
+Content-Type: application/json
+
+{
+  "codigo": "AE9000", "origem": "FOR", "destino": "LIS",
+  "dataPartida": "2026-12-20T22:00:00", "dataChegada": "2026-12-21T10:00:00",
+  "preco": 6000.00, "totalAssentos": 5
+}
+
+### Voo com 1 assento só, para testar "lotado". Anote o "id".
+POST {{voos}}/voos
+Content-Type: application/json
+
+{
+  "codigo": "AE7000", "origem": "FOR", "destino": "NAT",
+  "dataPartida": "2026-12-22T09:00:00", "dataChegada": "2026-12-22T10:00:00",
+  "preco": 250.00, "totalAssentos": 1
+}
+
+### ---------- TESTES DO VENDAS ----------
+
+### 1. Compra aprovada (201, status CONFIRMADA)
+POST {{vendas}}/vendas
+Content-Type: application/json
+
+{ "passageiroId": 1, "vooId": 1, "metodoPagamento": "CARTAO" }
+
+### 2. Pagamento recusado (402). Troque o vooId pelo id do voo AE9000
+POST {{vendas}}/vendas
+Content-Type: application/json
+
+{ "passageiroId": 1, "vooId": 5, "metodoPagamento": "PIX" }
+
+### 3. Confirme que o assento voltou (assentosDisponiveis continua 5)
+GET {{voos}}/voos/5
+
+### 4. Primeira compra no voo de 1 assento (201). Troque pelo id do AE7000
+POST {{vendas}}/vendas
+Content-Type: application/json
+
+{ "passageiroId": 2, "vooId": 6, "metodoPagamento": "PIX" }
+
+### 5. Segunda compra no mesmo voo (409 lotado)
+POST {{vendas}}/vendas
+Content-Type: application/json
+
+{ "passageiroId": 3, "vooId": 6, "metodoPagamento": "PIX" }
+
+### 6. Passageiro inexistente (404) — no simulado, o 999 não existe
+POST {{vendas}}/vendas
+Content-Type: application/json
+
+{ "passageiroId": 999, "vooId": 1, "metodoPagamento": "PIX" }
+
+### 7. Voo inexistente (404)
+POST {{vendas}}/vendas
+Content-Type: application/json
+
+{ "passageiroId": 1, "vooId": 9999, "metodoPagamento": "PIX" }
+
+### 8. Método de pagamento inválido (400)
+POST {{vendas}}/vendas
+Content-Type: application/json
+
+{ "passageiroId": 1, "vooId": 1, "metodoPagamento": "BOLETO" }
+
+### 9. Ver uma venda
+GET {{vendas}}/vendas/1
+
+### 10. Minhas compras (passageiro 1)
+GET {{vendas}}/vendas?passageiroId=1
+
+### 11. Todas as vendas
+GET {{vendas}}/vendas
