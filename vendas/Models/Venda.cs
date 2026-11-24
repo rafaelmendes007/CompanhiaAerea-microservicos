@@ -14,8 +14,8 @@
 
     public static class StatusVenda
     {
-        public const string pendente = "PENDENTE";
-        public const string confirmada = "CONFIRMADA";
+        public const string Pendente = "PENDENTE";
+        public const string Confirmada = "CONFIRMADA";
         public const string Recusada = "RECUSADA";
     }
 }
