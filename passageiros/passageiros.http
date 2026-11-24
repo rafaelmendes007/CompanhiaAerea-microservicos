@@ -1,6 +1,6 @@
 @base = http://localhost:8081
 
-#z## Cadastrar passageiro (deve dar 201)
+### Cadastrar passageiro (deve dar 201)
 POST {{base}}/passageiros
 Content-Type: application/json
 
