@@ -9,6 +9,10 @@ import (
 	"pagamentos/models"
 )
 
+// formatoDataHora é o formato ISO 8601 sem fuso que o contrato exige.
+// SQLite não tem tipo de data nativo, então guardamos como TEXT.
+const formatoDataHora = "2006-01-02T15:04:05"
+
 type PagamentoRepository struct {
 	db *sql.DB
 }
@@ -18,62 +22,46 @@ func NovoPagamentoRepository(db *sql.DB) *PagamentoRepository {
 }
 
 func (r *PagamentoRepository) GarantirTabela(ctx context.Context) error {
-	var existe int
-	err := r.db.QueryRowContext(ctx,
-		`SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME = 'PAGAMENTOS'`,
-	).Scan(&existe)
-	if err != nil {
-		return err
-	}
-	if existe > 0 {
-		return nil
-	}
-
-	_, err = r.db.ExecContext(ctx, `
-		CREATE TABLE PAGAMENTOS (
-			ID            NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-			VENDA_ID      NUMBER        NOT NULL,
-			PASSAGEIRO_ID NUMBER        NOT NULL,
-			VALOR         NUMBER(10,2)  NOT NULL,
-			METODO        VARCHAR2(10)  NOT NULL,
-			STATUS        VARCHAR2(10)  NOT NULL,
-			DATA_HORA     TIMESTAMP     NOT NULL,
-			CONSTRAINT ck_pag_metodo CHECK (METODO IN ('CARTAO', 'PIX')),
-			CONSTRAINT ck_pag_status CHECK (STATUS IN ('APROVADO', 'RECUSADO'))
+	_, err := r.db.ExecContext(ctx, `
+		CREATE TABLE IF NOT EXISTS pagamentos (
+			id            INTEGER PRIMARY KEY AUTOINCREMENT,
+			venda_id      INTEGER NOT NULL,
+			passageiro_id INTEGER NOT NULL,
+			valor         REAL    NOT NULL,
+			metodo        TEXT    NOT NULL CHECK (metodo IN ('CARTAO', 'PIX')),
+			status        TEXT    NOT NULL CHECK (status IN ('APROVADO', 'RECUSADO')),
+			data_hora     TEXT    NOT NULL
 		)`)
 	return err
 }
 
 func (r *PagamentoRepository) Criar(ctx context.Context, p models.Pagamento) (models.Pagamento, error) {
-	var id int64
-	_, err := r.db.ExecContext(ctx,
-		`INSERT INTO PAGAMENTOS (VENDA_ID, PASSAGEIRO_ID, VALOR, METODO, STATUS, DATA_HORA)
-		 VALUES (:venda, :passageiro, :valor, :metodo, :status, :data)
-		 RETURNING ID INTO :id`,
-		sql.Named("venda", p.VendaID),
-		sql.Named("passageiro", p.PassageiroID),
-		sql.Named("valor", p.Valor),
-		sql.Named("metodo", p.Metodo),
-		sql.Named("status", p.Status),
-		sql.Named("data", time.Time(p.DataHora)),
-		sql.Named("id", sql.Out{Dest: &id}),
-	)
+	err := r.db.QueryRowContext(ctx,
+		`INSERT INTO pagamentos (venda_id, passageiro_id, valor, metodo, status, data_hora)
+		 VALUES (?, ?, ?, ?, ?, ?)
+		 RETURNING id`,
+		p.VendaID,
+		p.PassageiroID,
+		p.Valor,
+		p.Metodo,
+		p.Status,
+		time.Time(p.DataHora).Format(formatoDataHora),
+	).Scan(&p.ID)
 	if err != nil {
 		return models.Pagamento{}, err
 	}
-	p.ID = id
 	return p, nil
 }
 
 func (r *PagamentoRepository) BuscarPorID(ctx context.Context, id int64) (models.Pagamento, error) {
 	var p models.Pagamento
-	var dataHora time.Time
+	var dataHora string
 
 	err := r.db.QueryRowContext(ctx,
-		`SELECT ID, VENDA_ID, PASSAGEIRO_ID, VALOR, METODO, STATUS, DATA_HORA
-		   FROM PAGAMENTOS
-		  WHERE ID = :id`,
-		sql.Named("id", id),
+		`SELECT id, venda_id, passageiro_id, valor, metodo, status, data_hora
+		   FROM pagamentos
+		  WHERE id = ?`,
+		id,
 	).Scan(&p.ID, &p.VendaID, &p.PassageiroID, &p.Valor, &p.Metodo, &p.Status, &dataHora)
 
 	if errors.Is(err, sql.ErrNoRows) {
@@ -82,6 +70,11 @@ func (r *PagamentoRepository) BuscarPorID(ctx context.Context, id int64) (models
 	if err != nil {
 		return models.Pagamento{}, err
 	}
-	p.DataHora = models.DataHora(dataHora)
+
+	t, err := time.ParseInLocation(formatoDataHora, dataHora, time.Local)
+	if err != nil {
+		return models.Pagamento{}, err
+	}
+	p.DataHora = models.DataHora(t)
 	return p, nil
 }

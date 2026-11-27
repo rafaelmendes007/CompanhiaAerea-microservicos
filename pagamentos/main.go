@@ -15,21 +15,26 @@ import (
 )
 
 func main() {
-	dsn := os.Getenv("ORACLE_DSN")
-	if dsn == "" {
-		log.Fatal("variável de ambiente ORACLE_DSN não definida")
+	tursoURL := os.Getenv("TURSO_DATABASE_URL")
+	if tursoURL == "" {
+		log.Fatal("variável de ambiente TURSO_DATABASE_URL não definida")
+	}
+	tursoToken := os.Getenv("TURSO_AUTH_TOKEN")
+	if tursoToken == "" {
+		log.Fatal("variável de ambiente TURSO_AUTH_TOKEN não definida")
 	}
 	porta := getenv("PORT", "8082")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
-	db, err := data.Conectar(ctx, dsn)
+	db, err := data.Conectar(ctx, tursoURL, tursoToken)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
+	// Monta as camadas: repository → service → controller
 	repo := repositories.NovoPagamentoRepository(db)
 	if err := repo.GarantirTabela(ctx); err != nil {
 		log.Fatal("erro ao criar tabela: ", err)
