@@ -209,7 +209,7 @@ function App() {
           <button onClick={() => setPagina("inicio")}>Início</button>
           <button onClick={() => setPagina("passageiros")}>Passageiros</button>
           <button onClick={() => setPagina("voos")}>Voos</button>
-          <button onClick={() => setPagina("compras")}>Compras</button>
+          <button onClick={() => setPagina("compras")}>vendas</button>
           <button onClick={() => setPagina("checkin")}>Check-in</button>
         </nav>
       </header>
