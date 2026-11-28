@@ -1,0 +1,4 @@
+.env
+pagamentos
+*.http
+.git

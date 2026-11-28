@@ -1,0 +1,105 @@
+@base = http://localhost:8082
+
+### Pagamento aprovado com cartão (deve dar 201, status APROVADO)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 10,
+  "passageiroId": 1,
+  "valor": 899.90,
+  "metodo": "CARTAO"
+}
+
+### Pagamento aprovado com PIX (deve dar 201, status APROVADO)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 11,
+  "passageiroId": 1,
+  "valor": 350.00,
+  "metodo": "PIX"
+}
+
+### Pagamento recusado por valor acima de 5000 (deve dar 201, status RECUSADO)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 12,
+  "passageiroId": 1,
+  "valor": 5000.01,
+  "metodo": "PIX"
+}
+
+### Limite exato de 5000 (deve dar 201, status APROVADO)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 13,
+  "passageiroId": 1,
+  "valor": 5000.00,
+  "metodo": "CARTAO"
+}
+
+### Buscar pagamento existente (deve dar 200)
+# Ajuste o id se o pagamento anterior não gerar o id 1
+GET {{base}}/pagamentos/1
+
+### Pagamento inexistente (deve dar 404)
+GET {{base}}/pagamentos/999
+
+### ID inválido (deve dar 404)
+GET {{base}}/pagamentos/abc
+
+### Valor zero (deve dar 400)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 10,
+  "passageiroId": 1,
+  "valor": 0,
+  "metodo": "CARTAO"
+}
+
+### Valor negativo (deve dar 400)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 10,
+  "passageiroId": 1,
+  "valor": -50,
+  "metodo": "PIX"
+}
+
+### Método desconhecido (deve dar 400)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 10,
+  "passageiroId": 1,
+  "valor": 100,
+  "metodo": "BOLETO"
+}
+
+### IDs obrigatórios zerados (deve dar 400)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{
+  "vendaId": 0,
+  "passageiroId": 0,
+  "valor": 100,
+  "metodo": "CARTAO"
+}
+
+### JSON malformado (deve dar 400)
+POST {{base}}/pagamentos
+Content-Type: application/json
+
+{ "vendaId": 10, "valor":

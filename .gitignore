@@ -480,5 +480,12 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
 # Ambiente virtual Python
 .venv/
+
+# Binários gerados pelo Go
+passageiros/passageiros
+pagamentos/pagamentos
+*.exe
+
